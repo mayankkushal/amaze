@@ -29,7 +29,7 @@
                             <img src="{{ image.image.url }}" alt="{{product.name}}" />
                         {% endwith %}
                         </div>
-                        <h2><a href="">{{product.name}}</a></h2>
+                        <h2><a href="{% url 'product' product.slug %}">{{product.name}}</a></h2>
                         <div class="product-carousel-price">
                             <ins>{{product.price}}</ins> <del>$999.00</del>
                         </div>  

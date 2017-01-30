@@ -1,3 +1,7 @@
+//during load
+$("#success-alert-added").hide();
+$("#success-alert-remove").hide();
+
 jQuery(document).ready(function($){
     
     // jQuery sticky Menu
@@ -83,6 +87,41 @@ jQuery(document).ready(function($){
     $('body').scrollspy({ 
         target: '.navbar-collapse',
         offset: 95
-    })      
+    });
+
+    //add item
+    $('#cart').click(function(e){
+        e.preventDefault();
+        var pk = $(this).attr('data-pk');
+        var quantity = $('#qty').val();
+        var csrfmiddlewaretoken = $('input[name=csrfmiddlewaretoken]').val();
+        $.ajax({
+            type: 'post',
+            url: '/add_cart',
+            data:{
+                pk: pk,
+                quantity: quantity,
+                csrfmiddlewaretoken: csrfmiddlewaretoken,
+            },
+            success: function(){
+                $("#success-alert-added").alert();
+                $("#success-alert-added").fadeTo(2000, 500).slideUp(500, function(){
+                  $("#success-alert-added").slideUp(500);
+        });   
+            },
+        });
+    });
+
+    //remove item
+    $('.rem-item').click(function(e){
+        var pk = $(e.target).attr('data-pk');
+        var csrfmiddlewaretoken = $('input[name=csrfmiddlewaretoken]').val();
+        $.post('/remove', {'pk':pk, 'csrfmiddlewaretoken':csrfmiddlewaretoken}, function(){
+            $("#success-alert-remove").alert();
+                $("#success-alert-remove").fadeTo(2000, 500).slideUp(500, function(){
+                  $("#success-alert-remove").slideUp(500);
+        });   
+        });
+    });
 });
 

@@ -27,6 +27,7 @@ SECRET_KEY = '113-&!w7!nhy)^2v-fv3y63jouz=c767r7aw)))-q$h2vmjlz5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'amaze',
+   
 ]
 
 MIDDLEWARE = [
