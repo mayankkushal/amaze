@@ -1,0 +1,42 @@
+{% extends 'amaze/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}Wishlist{% endblock %}
+
+{% block body_block %}
+<div class="product-big-title-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-bit-title text-center">
+                        <h2>Wishlist</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+            {% for product in like_list %}
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-shop-product">
+                        <div class="product-upper">
+                        {% with product.product.images.all|first as image %}
+                            <a href="{% url 'product' product.product.slug %}"><img src="{{ image.image.url }}" alt="{{product.product.name}}" /></a>
+                        {% endwith %}
+                        </div>
+                        <h2><a href="{% url 'product' product.product.slug %}">{{product.product.name}}</a></h2>
+                        <div class="product-carousel-price">
+                            <ins>{{product.product.price}}</ins> <del>$999.00</del>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>                       
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>  
+    </div>
+	
+{% endblock %}

@@ -123,5 +123,55 @@ jQuery(document).ready(function($){
         });   
         });
     });
+
+    //empty cart
+    $('#empty').click(function(e){
+        e.preventDefault();
+        var r = confirm("The cart will be completly emptied.");
+        if(r == true){
+            location.href = '/empty_cart';
+        };
+    });
+
+    $('.like').click(function(event){
+        var id = $(event.target).attr('data-id');
+        $.ajax({
+      type:'get',
+      url:'/like',
+      data:{
+        'id': $(event.target).attr('data-id'),
+        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(data){
+       if(data.like){
+        $(event.target).removeClass('btn-info');
+        $(event.target).addClass('btn-danger');
+       }
+       else{
+        $(event.target).removeClass('btn-danger');
+        $(event.target).addClass('btn-info');
+       }
+      },
+    });
+    });
+      $('.like').each(function(event){
+        var id = $(this).attr('data-id');
+        var lp ="#"+"like"+id;
+        $.ajax({
+          type:'get',
+          url:'/like_check',
+          data:{
+            'id': $(this).attr('data-id'),
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success:function(d){
+            if(d.lkd){
+                $(lp).removeClass('btn-info');
+                $(lp).addClass('btn-danger');
+               }
+        },
+  });
+});
+
 });
 

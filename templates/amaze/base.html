@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
@@ -39,11 +39,18 @@
                 <div class="col-md-8">
                     <div class="user-menu">
                         <ul>
+                        {% if user.is_authenticated %}
                             <li><a href="#"><i class="fa fa-user"></i> My Account</a></li>
-                            <li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
-                            <li><a href="cart.html"><i class="fa fa-user"></i> My Cart</a></li>
-                            <li><a href="checkout.html"><i class="fa fa-user"></i> Checkout</a></li>
-                            <li><a href="#"><i class="fa fa-user"></i> Login</a></li>
+                            <li><a href="{% url 'wishlist' %}"><i class="fa fa-heart"></i> Wishlist</a></li>
+                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                            <li><a href="{% url 'checkout' %}"><i class="fa fa-credit-card-alt"></i> Checkout</a></li>
+                            <li><a href="{% url 'auth_logout' %}?next={% url 'index' %}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        {% else %}
+                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                            <li><a href="checkout.html"><i class="fa fa-credit-card-alt"></i> Checkout</a></li>
+                            <li><a href="{% url 'auth_login' %}"><i class="fa fa-sign-in"></i> Login</a></li>
+                            <li><a href="{% url 'registration_register' %}"><i class="fa fa-user-plus"></i> SignUp</a></li>
+                        {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -52,7 +59,7 @@
                     <div class="header-right">
                         <ul class="list-unstyled list-inline">
                             <li class="dropdown dropdown-small">
-                                <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" href="#"><span class="key">currency :</span><span class="value">USD </span><b class="caret"></b></a>
+                                <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" href="#"><span class="key">currency :</span><span class="value">INR </span><b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">USD</a></li>
                                     <li><a href="#">INR</a></li>
@@ -86,7 +93,7 @@
                 
                 <div class="col-sm-6">
                     <div class="shopping-item">
-                        <a href="cart.html">Cart - <span class="cart-amunt">{% cart_amount %}</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">{% cart_count %}</span></a>
+                        <a href="{% url 'cart' %}">Cart - <span class="cart-amunt">{% cart_amount %}</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">{% cart_count %}</span></a>
                     </div>
                 </div>
             </div>
@@ -107,13 +114,17 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'index' %}">Home</a></li>
-                        <li><a href="{% url 'shop' %}">Shop page</a></li>
-                        <li><a href="single-product.html">Single product</a></li>
+                        <li><a href="{% url 'shop' %}">Shop</a></li>
                         <li><a href="{% url 'cart' %}">Cart</a></li>
-                        <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="#">Category</a></li>
-                        <li><a href="#">Others</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'auth_logout' %}?next={% url 'index'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'auth_login' %}"><i class="fa fa-sign-in"></i> Login</a></a></li>
+                        <li><a href="{% url 'registration_register' %}"><i class="fa fa-user-plus"></i> SignUp</a></li>
+                    {% endif %}
                     </ul>
                 </div>  
             </div>
@@ -141,7 +152,7 @@
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="footer-about-us">
-                        <h2>e<span>Electronics</span></h2>
+                        <h2>next<span>AMAZON</span></h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis sunt id doloribus vero quam laborum quas alias dolores blanditiis iusto consequatur, modi aliquid eveniet eligendi iure eaque ipsam iste, pariatur omnis sint! Suscipit, debitis, quisquam. Laborum commodi veritatis magni at?</p>
                         <div class="footer-social">
                             <a href="#" target="_blank"><i class="fa fa-facebook"></i></a>
@@ -157,11 +168,14 @@
                     <div class="footer-menu">
                         <h2 class="footer-wid-title">User Navigation </h2>
                         <ul>
-                            <li><a href="">My account</a></li>
-                            <li><a href="">Order history</a></li>
-                            <li><a href="">Wishlist</a></li>
-                            <li><a href="">Vendor contact</a></li>
-                            <li><a href="">Front page</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'wishlist'%}">Wishlist</a></li>
+                            <li><a href="#">Vendor contact</a></li>
+                            <li><a href="{% url 'index' %}">Front page</a></li>
+                        {% else %}
+                            <li><a href="#">Vendor contact</a></li>
+                            <li><a href="{% url 'index' %}">Front page</a></li>
+                        {% endif %}
                         </ul>                        
                     </div>
                 </div>
@@ -170,11 +184,7 @@
                     <div class="footer-menu">
                         <h2 class="footer-wid-title">Categories</h2>
                         <ul>
-                            <li><a href="">Mobile Phone</a></li>
-                            <li><a href="">Home accesseries</a></li>
-                            <li><a href="">LED TV</a></li>
-                            <li><a href="">Computer</a></li>
-                            <li><a href="">Gadets</a></li>
+                            <li>Coming Soon.</li>
                         </ul>                        
                     </div>
                 </div>

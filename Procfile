@@ -1,0 +1,1 @@
+web: gunicorn next_amazon_project.wsgi

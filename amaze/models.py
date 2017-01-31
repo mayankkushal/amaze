@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -61,3 +62,15 @@ class Image(models.Model):
 
 	def __str__(self):
 		return self.product.name
+
+class Cart(models.Model):
+	user = models.ForeignKey(User, null=True)
+	product = models.ForeignKey(Product)
+	quantity = models.IntegerField(default=0)
+
+	def __str__(self):
+		return self.product.name
+
+class Like(models.Model):
+    user = models.ForeignKey(User)
+    product = models.ForeignKey(Product)

@@ -1,9 +1,16 @@
 {% extends 'amaze/base.html' %}
 {% load staticfiles %}
+{% load cart_tags %}
 {% block title_block %}Cart{% endblock %}
 
 
 {% block body_block %}
+<style type="text/css">
+    .box {
+        height: 300px;
+        text-align: center;
+    }
+</style>
     <div class="product-big-title-area">
         <div class="container">
             <div class="row">
@@ -15,66 +22,8 @@
             </div>
         </div>
     </div> <!-- End Page title area -->
-    
-    
-    <div class="single-product-area">
-        <div class="zigzag-bottom"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="single-sidebar">
-                        <h2 class="sidebar-title">Search Products</h2>
-                        <form action="#">
-                            <input type="text" placeholder="Search products...">
-                            <input type="submit" value="Search">
-                        </form>
-                    </div>
-                    
-                    <div class="single-sidebar">
-                        <h2 class="sidebar-title">Products</h2>
-                        <div class="thubmnail-recent">
-                            <img src="img/product-thumb-1.jpg" class="recent-thumb" alt="">
-                            <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
-                            <div class="product-sidebar-price">
-                                <ins>$700.00</ins> <del>$800.00</del>
-                            </div>                             
-                        </div>
-                        <div class="thubmnail-recent">
-                            <img src="img/product-thumb-1.jpg" class="recent-thumb" alt="">
-                            <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
-                            <div class="product-sidebar-price">
-                                <ins>$700.00</ins> <del>$800.00</del>
-                            </div>                             
-                        </div>
-                        <div class="thubmnail-recent">
-                            <img src="img/product-thumb-1.jpg" class="recent-thumb" alt="">
-                            <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
-                            <div class="product-sidebar-price">
-                                <ins>$700.00</ins> <del>$800.00</del>
-                            </div>                             
-                        </div>
-                        <div class="thubmnail-recent">
-                            <img src="img/product-thumb-1.jpg" class="recent-thumb" alt="">
-                            <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
-                            <div class="product-sidebar-price">
-                                <ins>$700.00</ins> <del>$800.00</del>
-                            </div>                             
-                        </div>
-                    </div>
-                    
-                    <div class="single-sidebar">
-                        <h2 class="sidebar-title">Recent Posts</h2>
-                        <ul>
-                            <li><a href="#">Sony Smart TV - 2015</a></li>
-                            <li><a href="#">Sony Smart TV - 2015</a></li>
-                            <li><a href="#">Sony Smart TV - 2015</a></li>
-                            <li><a href="#">Sony Smart TV - 2015</a></li>
-                            <li><a href="#">Sony Smart TV - 2015</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-md-8">
+                {% if cart or product_list %}
+                <div class="col-md-12">
                     <div class="product-content-right">
                         <div class="woocommerce">
                             <form method="post" action="#">
@@ -90,6 +39,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    {% if cart %}
                                     {% for product, qty in lst %}
                                     {% csrf_token %}
                                         <tr class="cart_item">
@@ -113,9 +63,7 @@
 
                                             <td class="product-quantity">
                                                 <div class="quantity buttons_added">
-                                                    <input type="button" class="minus" value="-">
                                                     <input type="number" size="4" class="input-text qty text" title="Qty" value="{{ qty }}" min="0" step="1">
-                                                    <input type="button" class="plus" value="+">
                                                 </div>
                                             </td>
 
@@ -124,6 +72,40 @@
                                             </td>
                                         </tr>
                                     {% endfor %}
+                                    {% else %}
+                                    {% for product in product_list %}
+                                        {% csrf_token %}
+                                        <tr class="cart_item">
+                                            <td class="product-remove">
+                                                <button class="btn rem-item" data-pk="{{ product.product.id }}">&#10006;</button>
+                                            </td>
+
+                                            <td class="product-thumbnail">
+                                            {% with product.product.images.all|first as image %}
+                                                <a href="single-product.html"><img width="145" height="145" alt="poster_1_up" class="shop_thumbnail" src="{{ image.image.url }}"></a>
+                                            {% endwith %}
+                                            </td>
+
+                                            <td class="product-name">
+                                                <a href="single-product.html">{{ product.product.name }}</a> 
+                                            </td>
+
+                                            <td class="product-price">
+                                                <span class="amount">{{ product.product.price }}</span> 
+                                            </td>
+
+                                            <td class="product-quantity">
+                                                <div class="quantity buttons_added">
+                                                    <input type="number" size="4" class="input-text qty text" title="Qty" value="{{ product.quantity }}" min="0" step="1">
+                                                </div>
+                                            </td>
+
+                                            <td class="product-subtotal">
+                                                <span class="amount">{% widthratio product.quantity 1 product.product.price %}</span> 
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% endif %}
                                         <tr>
                                             <td class="actions" colspan="6">
                                                 <div class="coupon">
@@ -131,8 +113,9 @@
                                                     <input type="text" placeholder="Coupon code" value="" id="coupon_code" class="input-text" name="coupon_code">
                                                     <input type="submit" value="Apply Coupon" name="apply_coupon" class="button">
                                                 </div>
+                                                <input type="submit" id="empty" class="button" value="Empty Cart">
                                                 <input type="submit" value="Update Cart" name="update_cart" class="button">
-                                                <input type="submit" value="Proceed to Checkout" name="proceed" class="checkout-button button alt wc-forward">
+                                                <button type="submit" class="checkout-button button alt wc-forward" onClick="parent.location='{% url 'checkout'%}'">Proceed to Checkout</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -140,34 +123,6 @@
                             </form>
 
                             <div class="cart-collaterals">
-
-
-                            <div class="cross-sells">
-                                <h2>You may be interested in...</h2>
-                                <ul class="products">
-                                    <li class="product">
-                                        <a href="single-product.html">
-                                            <img width="325" height="325" alt="T_4_front" class="attachment-shop_catalog wp-post-image" src="img/product-2.jpg">
-                                            <h3>Ship Your Idea</h3>
-                                            <span class="price"><span class="amount">£20.00</span></span>
-                                        </a>
-
-                                        <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="22" rel="nofollow" href="single-product.html">Select options</a>
-                                    </li>
-
-                                    <li class="product">
-                                        <a href="single-product.html">
-                                            <img width="325" height="325" alt="T_4_front" class="attachment-shop_catalog wp-post-image" src="img/product-4.jpg">
-                                            <h3>Ship Your Idea</h3>
-                                            <span class="price"><span class="amount">£20.00</span></span>
-                                        </a>
-
-                                        <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="22" rel="nofollow" href="single-product.html">Select options</a>
-                                    </li>
-                                </ul>
-                            </div>
-
-
                             <div class="cart_totals ">
                                 <h2>Cart Totals</h2>
 
@@ -175,7 +130,7 @@
                                     <tbody>
                                         <tr class="cart-subtotal">
                                             <th>Cart Subtotal</th>
-                                            <td><span class="amount">£15.00</span></td>
+                                            <td><span class="amount">{% cart_amount %}</span></td>
                                         </tr>
 
                                         <tr class="shipping">
@@ -185,13 +140,13 @@
 
                                         <tr class="order-total">
                                             <th>Order Total</th>
-                                            <td><strong><span class="amount">£15.00</span></strong> </td>
+                                            <td><strong><span class="amount">{% cart_amount %}</span></strong> </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-
+                        <div class="container">
                             <form method="post" action="#" class="shipping_calculator">
                                 <h2><a class="shipping-calculator-button" data-toggle="collapse" href="#calcalute-shipping-wrap" aria-expanded="false" aria-controls="calcalute-shipping-wrap">Calculate Shipping</a></h2>
 
@@ -459,9 +414,15 @@
 
 
                             </div>
+                            </div>
                         </div>                        
                     </div>                    
                 </div>
+                {% else %}
+                <div class="container box">
+                    <h3>No item in cart yet</h3>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
