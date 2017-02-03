@@ -131,20 +131,19 @@
         </div>
     </div> <!-- End mainmenu area -->
     <div class="container mainmenu-area">
-  <div class="alert alert-success" id="success-alert-added hide" onLoad=>
+  <div class="alert alert-success" id="success-alert-added">
       <button type="button" class="close" data-dismiss="alert">x</button>
       <strong>Success! </strong>
       Item is added to the cart!
   </div>
-</div>
-<div class="container">
-  <div class="alert alert-success" id="success-alert-remove hide">
+      <script type="text/javascript">document.getElementById("success-alert-added").style.display = 'none';</script>
+  <div class="alert alert-success" id="success-alert-remove">
       <button type="button" class="close" data-dismiss="alert">x</button>
       <strong>Success! </strong>
       Item is removed from the cart!
   </div>
+  <script type="text/javascript">document.getElementById("success-alert-remove").style.display = 'none';</script>
 </div>
-<script type="text/javascript">document.getElementById("hide").style.display = 'none';</script>
     {% block body_block %}{%endblock%}
 
     <div class="footer-top-area">
