@@ -56,9 +56,16 @@ def add_cart(request):
 	if request.user.is_authenticated():
 		product = Product.objects.get(id=pk)
 		if product:
-			new_entry, created = Cart.objects.get_or_create(user=request.user, product=product, quantity=quantity)
-			if not created:
-				return cart(request)
+			try:
+				entry = Cart.objects.get(user=request.user, product=product)
+			except Cart.DoesNotExist:
+				entry = None 
+			if entry:
+				if entry.quantity != quantity:
+					entry.quantity = quantity
+					entry.save()
+			else:
+				Cart.objects.create(user=request.user, product=product, quantity=quantity)
 	else:
 		cart = request.session.get('cart', {})
 		cart[pk] = quantity
