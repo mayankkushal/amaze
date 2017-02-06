@@ -32,7 +32,7 @@
     <![endif]-->
   </head>
   <body>
-   
+  {% block body_starting %}{% endblock %}
     <div class="header-area">
         <div class="container">
             <div class="row">
@@ -136,7 +136,7 @@
       <strong>Success! </strong>
       Item is added to the cart!
   </div>
-      <script type="text/javascript">document.getElementById("success-alert-added").style.display = 'none';</script>
+  <script type="text/javascript">document.getElementById("success-alert-added").style.display = 'none';</script>
   <div class="alert alert-success" id="success-alert-remove">
       <button type="button" class="close" data-dismiss="alert">x</button>
       <strong>Success! </strong>
@@ -144,6 +144,10 @@
   </div>
   <script type="text/javascript">document.getElementById("success-alert-remove").style.display = 'none';</script>
 </div>
+    <div id="login">
+        <p>login</p>
+    </div>
+    <script type="text/javascript">document.getElementById("login").style.display="none";</script>
     {% block body_block %}{%endblock%}
 
     <div class="footer-top-area">
